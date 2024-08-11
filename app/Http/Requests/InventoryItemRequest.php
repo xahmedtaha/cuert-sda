@@ -14,13 +14,6 @@ class InventoryItemRequest extends FormRequest
         ];
     }
 
-    protected function passedValidation(): void
-    {
-        $this->merge([
-            'user_id' => auth()->id(),
-        ]);
-    }
-
     public function authorize(): bool
     {
         return true;

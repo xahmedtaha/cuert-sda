@@ -16,6 +16,7 @@ class InventoryItemResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'quantity' => $this->quantity,
+            'part' => $this->whenLoaded('part'),
         ];
     }
 }

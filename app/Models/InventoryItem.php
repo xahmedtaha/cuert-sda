@@ -11,11 +11,6 @@ class InventoryItem extends Model
 {
     protected $with = ['part'];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function part(): MorphTo
     {
         return $this->morphTo();

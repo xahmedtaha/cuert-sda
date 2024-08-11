@@ -24,7 +24,7 @@
                     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                         <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
                             <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                                <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                                <form @submit.prevent="submit" class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                                     <div class="h-0 flex-1 overflow-y-auto">
                                         <div class="bg-indigo-700 px-4 py-6 sm:px-6">
                                             <div class="flex items-center justify-between">
@@ -47,7 +47,7 @@
                                                     <div>
                                                         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
                                                         <div class="mt-2">
-                                                            <input v-model="form.name" type="text" name="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            <input v-model="form.name" autofocus type="text" name="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                                         </div>
                                                     </div>
                                                     <div>
@@ -61,7 +61,7 @@
                                                         <div class="mt-2 space-y-4">
                                                             <div class="relative flex items-start">
                                                                 <div class="absolute flex h-6 items-center">
-                                                                    <input v-model="form.type" id="mechanical-part" name="part_type" value="mechanical" aria-describedby="mechanical-part-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                                                                    <input v-model="form.part_type" id="mechanical-part" name="part_type" value="mechanical" aria-describedby="mechanical-part-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
                                                                 </div>
                                                                 <div class="pl-7 text-sm leading-6">
                                                                     <label for="mechanical-part" class="font-medium text-gray-900">Mechanical Part</label>
@@ -70,7 +70,7 @@
                                                             </div>
                                                             <div class="relative flex items-start">
                                                                 <div class="absolute flex h-6 items-center">
-                                                                    <input v-model="form.type" id="electrical-part" name="part_type" value="electrical" aria-describedby="electrical-part-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                                                                    <input v-model="form.part_type" id="electrical-part" name="part_type" value="electrical" aria-describedby="electrical-part-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
                                                                 </div>
                                                                 <div class="pl-7 text-sm leading-6">
                                                                     <label for="electrical-part" class="font-medium text-gray-900">Electrical Part</label>
@@ -79,7 +79,7 @@
                                                             </div>
                                                             <div class="relative flex items-start">
                                                                 <div class="absolute flex h-6 items-center">
-                                                                    <input v-model="form.type" id="raw-material" name="part_type" value="material" aria-describedby="raw-material-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                                                                    <input v-model="form.part_type" id="raw-material" name="part_type" value="material" aria-describedby="raw-material-description" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600" />
                                                                 </div>
                                                                 <div class="pl-7 text-sm leading-6">
                                                                     <label for="raw-material" class="font-medium text-gray-900">Raw Material</label>
@@ -90,7 +90,7 @@
                                                     </fieldset>
                                                 </div>
                                                 <div class="pb-6 pt-4">
-                                                    <section class="space-y-6" v-show="form.type === 'mechanical'">
+                                                    <section class="space-y-6" v-show="form.part_type === 'mechanical'">
                                                         <div>
                                                             <label for="material" class="block text-sm font-medium leading-6 text-gray-900">Material</label>
                                                             <div class="mt-2">
@@ -107,6 +107,40 @@
                                                             <label for="weight" class="block text-sm font-medium leading-6 text-gray-900">Weight</label>
                                                             <div class="mt-2">
                                                                 <input v-model="form.weight" type="number" min="0" name="weight" id="weight" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                    <section class="space-y-6" v-show="form.part_type === 'electrical'">
+                                                        <div>
+                                                            <label for="voltage" class="block text-sm font-medium leading-6 text-gray-900">Voltage</label>
+                                                            <div class="mt-2">
+                                                                <input v-model="form.voltage" type="number" min="0" name="voltage" id="voltage" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label for="current" class="block text-sm font-medium leading-6 text-gray-900">Current</label>
+                                                            <div class="mt-2">
+                                                                <input v-model="form.current" type="number" min="0" name="current" id="current" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label for="powerRating" class="block text-sm font-medium leading-6 text-gray-900">Power Rating</label>
+                                                            <div class="mt-2">
+                                                                <input v-model="form.powerRating" type="number" min="0" name="powerRating" id="powerRating" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                    <section class="space-y-6" v-show="form.part_type === 'material'">
+                                                        <div>
+                                                            <label for="type" class="block text-sm font-medium leading-6 text-gray-900">Type</label>
+                                                            <div class="mt-2">
+                                                                <input v-model="form.type" type="text" name="type" id="type" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label for="purity" class="block text-sm font-medium leading-6 text-gray-900">Purity</label>
+                                                            <div class="mt-2">
+                                                                <input v-model="form.purity" type="number" min="0" name="purity" id="purity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                                             </div>
                                                         </div>
                                                     </section>
@@ -137,12 +171,23 @@ import {useForm} from "@inertiajs/vue3";
 const form = useForm({
     name: '',
     quantity: 0,
-    type: 'mechanical',
+    part_type: 'mechanical',
 
     material: '',
     dimensions: '',
     weight: 0,
+
+    type: '',
+    purity: 0,
+
+    voltage: 0,
+    current: 0,
+    powerRating: 0,
 })
+
+function submit() {
+    form.post(route('inventoryItems.store'))
+}
 
 defineProps({open: Boolean})
 defineEmits(['close'])
