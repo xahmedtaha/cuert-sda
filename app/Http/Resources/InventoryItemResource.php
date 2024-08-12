@@ -2,10 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Models\ElectricalPart;
+use App\Models\InventoryItem;
+use App\Models\MechanicalPart;
+use App\Models\RawMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\InventoryItem */
+/** @mixin InventoryItem */
 class InventoryItemResource extends JsonResource
 {
     public function toArray(Request $request): array
@@ -16,7 +20,13 @@ class InventoryItemResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'quantity' => $this->quantity,
+            'part_type' => match ($this->part_type) {
+                MechanicalPart::class => __('Mechanical Part'),
+                ElectricalPart::class => __('Electrical Part'),
+                RawMaterial::class => __('Raw Material'),
+            },
             'part' => $this->whenLoaded('part'),
+            'description' => $this->description,
         ];
     }
 }

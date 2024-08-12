@@ -31,6 +31,18 @@ const form = useForm({
 
         <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
             <div>
+                <InputLabel for="role" value="Role" />
+
+                <TextInput
+                    disabled
+                    id="role"
+                    type="text"
+                    class="mt-1 block w-full capitalize"
+                    :model-value="$page.props.auth.user.role"
+                />
+            </div>
+
+            <div>
                 <InputLabel for="name" value="Name" />
 
                 <TextInput
