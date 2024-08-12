@@ -35,7 +35,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'isAdmin' => $request->user()->role === User::ADMIN_ROLE,
+            'isAdmin' => $request->user()?->role === User::ADMIN_ROLE,
             'flash' => [
                 'message' => fn () => $request->session()->get('message')
             ],

@@ -2,6 +2,24 @@
     <div>
         <teleport to="body">
             <AddItemOverlay v-if="$page.props.isAdmin" :open="addItemOverlayOpen" @close="addItemOverlayOpen = false" />
+            <Modal max-width="md" :show="confirmingItemDeletion" @close="closeDeleteModal">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        Are you sure you want to delete {{itemToDelete?.name}}?
+                    </h2>
+
+                    <div class="mt-6 flex justify-end">
+                        <SecondaryButton @click="closeDeleteModal"> Cancel </SecondaryButton>
+
+                        <DangerButton
+                            class="ms-3"
+                            @click="deleteItem"
+                        >
+                            Delete Item
+                        </DangerButton>
+                    </div>
+                </div>
+            </Modal>
         </teleport>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b">
             <div class="sm:flex sm:items-center pb-4">
@@ -10,7 +28,7 @@
                     <p class="mt-2 text-sm text-gray-700">A list of all the items added to the system.</p>
                 </div>
                 <div v-if="$page.props.isAdmin" class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <button @click="addItemOverlayOpen = true" type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add item</button>
+                    <button @click="addItemOverlayOpen = true" type="button" class="block rounded-md bg-primary-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">Add item</button>
                 </div>
             </div>
         </div>
@@ -52,12 +70,12 @@
                         </td>
                         <td v-if="$page.props.isAdmin" class="relative py-4 pl-3 text-right text-sm font-medium md:table-cell">
                             <div class="inline-flex gap-x-3">
-                                <button class="text-indigo-600 hover:text-indigo-900">
+                                <button class="text-primary-600 hover:text-primary-900">
                                     <PencilSquareIcon class="size-5" />
                                     <span class="sr-only">Edit, {{ item.name }}</span>
                                 </button>
                                 <button class="text-red-600 hover:text-red-900">
-                                    <TrashIcon class="size-5" />
+                                    <TrashIcon class="size-5" @click="itemToDelete = item; confirmingItemDeletion = true;" />
                                     <span class="sr-only">Delete, {{ item.name }}</span>
                                 </button>
                             </div>
@@ -81,8 +99,27 @@
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import AddItemOverlay from "@/Pages/Partials/AddItemOverlay.vue";
 import {ref} from "vue";
+import TextInput from "@/Components/TextInput.vue";
+import Modal from "@/Components/Modal.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import {router} from "@inertiajs/vue3";
 
 defineProps({ items: Array, canWrite: Boolean })
 
 const addItemOverlayOpen = ref(false)
+const confirmingItemDeletion = ref(false)
+const itemToDelete = ref(null)
+
+function closeDeleteModal() {
+    confirmingItemDeletion.value = false
+    itemToDelete.value = null
+}
+function deleteItem() {
+    router.delete(route('inventoryItems.destroy', {inventoryItem: itemToDelete.value?.id}), {
+        onSuccess: () => closeDeleteModal(),
+    })
+}
 </script>
