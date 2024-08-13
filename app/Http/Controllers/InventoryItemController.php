@@ -67,7 +67,29 @@ class InventoryItemController extends Controller
     {
         $this->authorize('update', $inventoryItem);
 
-        $inventoryItem->update($request->validated());
+        DB::transaction(function () use ($request, $inventoryItem) {
+            $itemColumns = ['name', 'quantity', 'part_id'];
+            $rawMaterialColumns = ['type', 'purity'];
+            $electricalPartColumns = ['voltage', 'current', 'power_rating'];
+            $mechanicalPartColumns = ['dimensions', 'weight', 'material'];
+
+            $data = $request->toArray();
+            $data = match ($inventoryItem->part_type) {
+                RawMaterial::class => array_merge(
+                    Arr::only($data, [...$itemColumns, ...$rawMaterialColumns]),
+                    ['part_id' => RawMaterial::updateOrCreate(['id' => $inventoryItem->part_id], Arr::only($data, $rawMaterialColumns))->id]
+                ),
+                ElectricalPart::class => array_merge(
+                    Arr::only($data, [...$itemColumns, ...$electricalPartColumns]),
+                    ['part_id' => ElectricalPart::updateOrCreate(['id' => $inventoryItem->part_id], Arr::only($data, $electricalPartColumns))->id]
+                ),
+                MechanicalPart::class => array_merge(
+                    Arr::only($data, [...$itemColumns, ...$mechanicalPartColumns]),
+                    ['part_id' => MechanicalPart::updateOrCreate(['id' => $inventoryItem->part_id], Arr::only($data, $mechanicalPartColumns))->id]
+                ),
+            };
+            return $inventoryItem->update(Arr::only($data, $itemColumns));
+        });
 
         return to_route('dashboard')->with('message', 'Item updated.');
     }

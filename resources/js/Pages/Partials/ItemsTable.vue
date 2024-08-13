@@ -1,7 +1,7 @@
 <template>
     <div>
         <teleport to="body">
-            <AddItemOverlay v-if="$page.props.isAdmin" :open="addItemOverlayOpen" @close="addItemOverlayOpen = false" />
+            <AddItemOverlay ref="itemModal" v-if="$page.props.isAdmin" :open="addItemOverlayOpen" @close="addItemOverlayOpen = false" />
             <Modal max-width="md" :show="confirmingItemDeletion" @close="closeDeleteModal">
                 <div class="p-6">
                     <h2 class="text-lg font-medium text-gray-900">
@@ -28,7 +28,7 @@
                     <p class="mt-2 text-sm text-gray-700">A list of all the items added to the system.</p>
                 </div>
                 <div v-if="$page.props.isAdmin" class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <button @click="addItemOverlayOpen = true" type="button" class="block rounded-md bg-primary-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">Add item</button>
+                    <PrimaryButton @click="createItem" type="button">Add item</PrimaryButton>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         </td>
                         <td v-if="$page.props.isAdmin" class="relative py-4 pl-3 text-right text-sm font-medium md:table-cell">
                             <div class="inline-flex gap-x-3">
-                                <button class="text-primary-600 hover:text-primary-900">
+                                <button class="text-gray-800 hover:text-gray-900" @click="editItem(item)">
                                     <PencilSquareIcon class="size-5" />
                                     <span class="sr-only">Edit, {{ item.name }}</span>
                                 </button>
@@ -106,12 +106,15 @@ import InputError from "@/Components/InputError.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {router} from "@inertiajs/vue3";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({ items: Array, canWrite: Boolean })
 
 const addItemOverlayOpen = ref(false)
 const confirmingItemDeletion = ref(false)
 const itemToDelete = ref(null)
+
+const itemModal = ref(null)
 
 function closeDeleteModal() {
     confirmingItemDeletion.value = false
@@ -121,5 +124,20 @@ function deleteItem() {
     router.delete(route('inventoryItems.destroy', {inventoryItem: itemToDelete.value?.id}), {
         onSuccess: () => closeDeleteModal(),
     })
+}
+function editItem(item) {
+    addItemOverlayOpen.value = true
+    itemModal.value.editItem({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        type: item.type_short,
+        ...Object.keys(item.description).reduce((carry, current) => ({[current.toLowerCase()]: item.description[current], ...carry}), []),
+    })
+}
+
+function createItem() {
+    addItemOverlayOpen.value = true
+    itemModal.value.createItem()
 }
 </script>

@@ -25,6 +25,11 @@ class InventoryItemResource extends JsonResource
                 ElectricalPart::class => __('Electrical Part'),
                 RawMaterial::class => __('Raw Material'),
             },
+            'type_short' => match ($this->part_type) {
+                MechanicalPart::class => __('mechanical'),
+                ElectricalPart::class => __('electrical'),
+                RawMaterial::class => __('material'),
+            },
             'part' => $this->whenLoaded('part'),
             'description' => $this->description,
         ];

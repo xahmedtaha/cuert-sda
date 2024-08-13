@@ -60,7 +60,7 @@
 
                                                         <InputError class="mt-2" :message="form.errors.quantity" />
                                                     </div>
-                                                    <fieldset>
+                                                    <fieldset :disabled="itemId" :class="{'opacity-75': itemId}">
                                                         <legend class="text-sm font-medium leading-6 text-gray-900">Type</legend>
                                                         <div class="mt-2 space-y-4">
                                                             <div class="relative flex items-start">
@@ -213,9 +213,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                                        <button :disabled="form.processing" type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" @click="$emit('close')">Cancel</button>
-                                        <button :disabled="form.processing" type="submit" class="ml-4 inline-flex justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">Save</button>
+                                    <div class="flex flex-shrink-0 justify-end px-4 py-4 gap-x-4">
+                                        <SecondaryButton :disabled="form.processing" type="button" @click="$emit('close')">Cancel</SecondaryButton>
+                                        <PrimaryButton :disabled="form.processing" type="submit">Save</PrimaryButton>
                                     </div>
                                 </form>
                             </DialogPanel>
@@ -235,6 +235,10 @@ import {useForm} from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+
+const itemId = ref(null)
 
 const form = useForm({
     name: '',
@@ -259,14 +263,34 @@ function autofocus() {
 }
 
 function submit() {
-    form.post(route('inventoryItems.store'), {
-        onSuccess: () => {
-            form.reset()
-            emit('close')
-        },
-    })
+    if(itemId.value) {
+        form.put(route('inventoryItems.update', {inventoryItem: itemId.value}), {
+            onSuccess: () => {
+                form.reset()
+                emit('close')
+            },
+        })
+    } else {
+        form.post(route('inventoryItems.store'), {
+            onSuccess: () => {
+                form.reset()
+                emit('close')
+            },
+        })
+    }
 }
 
 const props = defineProps({open: Boolean})
 const emit = defineEmits(['close'])
+
+defineExpose({
+    editItem(item) {
+        itemId.value = item.id
+        Object.assign(form, item)
+    },
+    createItem() {
+        itemId.value = null
+        form.reset()
+    }
+})
 </script>
