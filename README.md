@@ -20,3 +20,4 @@ This app is built with:
 - TailwindCSS
 - Vue.js
 - Inertia.js
+- DB: SQLite
