@@ -99,10 +99,7 @@
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import AddItemOverlay from "@/Pages/Partials/AddItemOverlay.vue";
 import {ref} from "vue";
-import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import InputError from "@/Components/InputError.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {router} from "@inertiajs/vue3";
