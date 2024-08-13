@@ -3,6 +3,7 @@
 A simplified inventory management system with roles (user/admin)
 
 ### Setup
+- Install PHP 8.3
 - Clone the repository.
 - `composer install`
 - `npm install`
@@ -10,6 +11,8 @@ A simplified inventory management system with roles (user/admin)
 - `cp .env.example .env`
 - `php artisan key:generate`
 - `php artisan migrate --seed`
+- php artisan serve
+- Access the app at localhost:8000
 
 A default admin user will be created (username: admin, password: password).
 
