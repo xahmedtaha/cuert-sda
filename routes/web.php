@@ -27,3 +27,14 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/DBMigrate', function () {
+    if (app()->isProduction()) abort(403);
+    Artisan::call('migrate:fresh --seed');
+    return 'Database migrated';
+});
+Route::get('/DBSeed', function () {
+    if (app()->isProduction()) abort(403);
+    Artisan::call('db:seed');
+    return 'Database seeded';
+});
