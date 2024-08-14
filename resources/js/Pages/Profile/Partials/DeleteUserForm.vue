@@ -14,7 +14,10 @@ const passwordInput = ref(null);
 const form = useForm({
     password: '',
 });
-
+form.transform(data => ({
+    ...data,
+    _method: 'DELETE',
+}))
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
 
@@ -22,10 +25,7 @@ const confirmUserDeletion = () => {
 };
 
 const deleteUser = () => {
-    form.transform(data => ({
-        ...data,
-        _method: 'DELETE',
-    }))
+
     form.post(route('profile.destroy'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),

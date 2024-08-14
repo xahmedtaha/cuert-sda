@@ -16,12 +16,10 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     username: user.username,
+    _method: 'PATCH'
 });
 
-form.transform(data => ({
-    ...data,
-    _method: 'PATCH',
-}))
+form._method = 'PATCH'
 </script>
 
 <template>

@@ -255,6 +255,8 @@ const form = useForm({
     voltage: 0,
     current: 0,
     power_rating: 0,
+
+    _method: 'POST'
 })
 
 const nameInput = ref(null)
@@ -264,10 +266,7 @@ function autofocus() {
 
 function submit() {
     if(itemId.value) {
-        form.transform(data => ({
-            ...data,
-            _method: 'PUT'
-        }))
+        form._method = 'PUT'
         form.post(route('inventoryItems.update', {inventoryItem: itemId.value}), {
             onSuccess: () => {
                 form.reset()
@@ -275,6 +274,7 @@ function submit() {
             },
         })
     } else {
+        form._method = 'POST'
         form.post(route('inventoryItems.store'), {
             onSuccess: () => {
                 form.reset()
