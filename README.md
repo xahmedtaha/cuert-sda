@@ -2,6 +2,8 @@
 
 A simplified inventory management system with roles (user/admin)
 
+DEMO: [http://curt-sda.free.nf/]
+
 ### Setup
 - Install PHP 8.3
 - Clone the repository.
