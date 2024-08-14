@@ -264,7 +264,11 @@ function autofocus() {
 
 function submit() {
     if(itemId.value) {
-        form.put(route('inventoryItems.update', {inventoryItem: itemId.value}), {
+        form.transform(data => ({
+            ...data,
+            _method: 'PUT'
+        }))
+        form.post(route('inventoryItems.update', {inventoryItem: itemId.value}), {
             onSuccess: () => {
                 form.reset()
                 emit('close')

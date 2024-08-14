@@ -118,7 +118,7 @@ function closeDeleteModal() {
     itemToDelete.value = null
 }
 function deleteItem() {
-    router.delete(route('inventoryItems.destroy', {inventoryItem: itemToDelete.value?.id}), {
+    router.post(route('inventoryItems.destroy', {inventoryItem: itemToDelete.value?.id}), {_method: 'DELETE'}, {
         onSuccess: () => closeDeleteModal(),
     })
 }
