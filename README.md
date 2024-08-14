@@ -9,7 +9,7 @@ DEMO: [http://curt-sda.free.nf/]
 - Clone the repository.
 - `composer install`
 - `npm install`
-- `npm run build`
+- `npm run dev`
 - `cp .env.example .env`
 - `php artisan key:generate`
 - `php artisan migrate --seed`
